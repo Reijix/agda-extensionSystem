@@ -1,0 +1,3 @@
+name: ExtensionSystem
+include: . 
+depend: agda-categories standard-library

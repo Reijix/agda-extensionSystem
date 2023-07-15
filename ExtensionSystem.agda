@@ -32,8 +32,11 @@ ExtensionSystem→Monad {𝒞 = 𝒞} 𝐾 = record
     { F = T
     ; η = η'
     ; μ = μ'
+    -- M3
     ; identityˡ = Identityˡ
+    -- M2
     ; identityʳ = K2
+    -- M1
     ; assoc = assoc'
     ; sym-assoc = sym assoc'
     }
@@ -45,20 +48,22 @@ ExtensionSystem→Monad {𝒞 = 𝒞} 𝐾 = record
         T = RMonad⇒Functor 𝐾
         open Functor T renaming (F₁ to T₁)
         open Equiv
+        -- constructing the natural transformation η from the given family of morphisms 'unit' 
         η' = ntHelper {F = Id} {G = T} record
             { η = λ X → unit
             ; commute = λ {X} {Y} f → sym K2
             }
+        -- constructing the natural transformation μ
         μ' = ntHelper {F = T ∘F T} {G = T} record
             { η = λ X → (idC {A = T₀ X})ᵀ
             ; commute = λ {X} {Y} f → begin 
-                ((idC ᵀ) ∘ (unit ∘ (unit ∘ f)ᵀ)ᵀ)       ≈⟨ (sym $ K3) ⟩ 
-                (((idC ᵀ) ∘ unit ∘ ((unit ∘ f) ᵀ)) ᵀ)   ≈⟨ ᵀ-≈ sym-assoc ⟩
-                ((((idC ᵀ) ∘ unit) ∘ ((unit ∘ f) ᵀ)) ᵀ) ≈⟨ ᵀ-≈ (∘-resp-≈ˡ K2) ⟩
-                ((idC ∘ ((unit ∘ f) ᵀ)) ᵀ)              ≈⟨ ᵀ-≈ identityˡ ⟩
-                (((unit ∘ f) ᵀ) ᵀ)                      ≈⟨ ᵀ-≈ (sym identityʳ) ⟩
-                ((((unit ∘ f) ᵀ) ∘ idC) ᵀ)              ≈⟨ K3 ⟩ 
-                (unit ∘ f)ᵀ ∘ (idC ᵀ) ∎
+                    ((idC ᵀ) ∘ (unit ∘ (unit ∘ f)ᵀ)ᵀ)       ≈⟨ (sym $ K3) ⟩ 
+                    (((idC ᵀ) ∘ unit ∘ ((unit ∘ f) ᵀ)) ᵀ)   ≈⟨ ᵀ-≈ sym-assoc ⟩
+                    ((((idC ᵀ) ∘ unit) ∘ ((unit ∘ f) ᵀ)) ᵀ) ≈⟨ ᵀ-≈ (∘-resp-≈ˡ K2) ⟩
+                    ((idC ∘ ((unit ∘ f) ᵀ)) ᵀ)              ≈⟨ ᵀ-≈ identityˡ ⟩
+                    (((unit ∘ f) ᵀ) ᵀ)                      ≈⟨ ᵀ-≈ (sym identityʳ) ⟩
+                    ((((unit ∘ f) ᵀ) ∘ idC) ᵀ)              ≈⟨ K3 ⟩ 
+                    (unit ∘ f)ᵀ ∘ (idC ᵀ) ∎
             }
         open NaturalTransformation η' using () renaming (η to η)
         open NaturalTransformation μ' using () renaming (η to μ)
